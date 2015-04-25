@@ -19904,7 +19904,7 @@ var React = require('react');
 var APP =
   React.createClass({displayName: "APP",
     render:function(){
-      return React.createElement("h1", null, "MY FLUX APP")
+      return React.createElement("h1", null, "MY FLUX APP 2")
     }
   });
 module.exports = APP;
