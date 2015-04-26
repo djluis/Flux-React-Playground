@@ -7,9 +7,10 @@ var CHANGE_EVENT = "change";
 
 
 var _catalog = [
-    {id:1, title: 'Widget #1', cost: 1},
-    {id:2, title: 'Widget #2', cost: 2},
-    {id:3, title: 'Widget #3', cost: 3}
+    {id:1, title: 'DVD', cost: 10},
+    {id:2, title: 'ENGINE', cost: 50},
+    {id:3, title: 'GPU CARD', cost: 200},
+    {id:4, title: 'MOTOBIKE', cost: 1000}
   ];
 
 var _cartItems = [];
