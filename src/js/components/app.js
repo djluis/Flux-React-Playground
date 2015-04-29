@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
-var Catalog = require('../components/app-catalog.js');
-var Cart = require('../components/app-cart.js');
+var Catalog = require('../components/catalog/app-catalog.js');
+var Cart = require('../components/cart/app-cart.js');
 var Navbar = require('../components/app-navbar.js');
 
 var APP =

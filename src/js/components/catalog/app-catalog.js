@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
-var AppStore = require('../stores/app-store.js');
-var AddToCart = require('../components/app-addtocart.js');
+var AppStore = require('../../stores/app-store.js');
+var AddToCart = require('../catalog/app-addtocart.js');
 
 function getCatalog(){
   return {items: AppStore.getCatalog()}

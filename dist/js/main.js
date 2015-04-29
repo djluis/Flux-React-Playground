@@ -21228,25 +21228,85 @@ module.exports = AppActions;
 },{"../constants/app-constants.js":169,"../dispatchers/app-dispatcher.js":170}],161:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
-var AppActions = require('../actions/app-actions.js');
-var AddToCart =
-  React.createClass({displayName: "AddToCart",
-    handleClick:function(){
-      AppActions.addItem(this.props.item);
+
+var Navbar =
+  React.createClass({displayName: "Navbar",
+    _onChange:function(){
+      Console.log('_onChange -> Navbar');
     },
     render:function(){
-      return React.createElement("button", {className: "btn btn-primary", onClick: this.handleClick}, "Add To cart")
+        return (
+         React.createElement("nav", {className: "navbar navbar-default"}, 
+  React.createElement("div", {className: "container-fluid"}, 
+    React.createElement("div", {className: "navbar-header"}, 
+      React.createElement("button", {type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#bs-example-navbar-collapse-1"}, 
+        React.createElement("span", {className: "sr-only"}, "Toggle navigation"), 
+        React.createElement("span", {className: "icon-bar"}), 
+        React.createElement("span", {className: "icon-bar"}), 
+        React.createElement("span", {className: "icon-bar"})
+      ), 
+      React.createElement("a", {className: "navbar-brand", href: "#"}, "My cart shop")
+    ), 
+
+    React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
+      React.createElement("ul", {className: "nav navbar-nav"}, 
+        React.createElement("li", {className: "active"}, React.createElement("a", {href: "#"}, "Link ", React.createElement("span", {className: "sr-only"}, "(current)"))), 
+        React.createElement("li", null, React.createElement("a", {href: "#"}, "Link")), 
+        React.createElement("li", {className: "dropdown"}, 
+          React.createElement("a", {href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-expanded": "false"}, "Dropdown ", React.createElement("span", {className: "caret"})), 
+          React.createElement("ul", {className: "dropdown-menu", role: "menu"}, 
+            React.createElement("li", null, React.createElement("a", {href: "#"}, "Action")), 
+            React.createElement("li", null, React.createElement("a", {href: "#"}, "Another action")), 
+            React.createElement("li", null, React.createElement("a", {href: "#"}, "Something else here")), 
+            React.createElement("li", {className: "divider"}), 
+            React.createElement("li", null, React.createElement("a", {href: "#"}, "Separated link")), 
+            React.createElement("li", {className: "divider"}), 
+            React.createElement("li", null, React.createElement("a", {href: "#"}, "One more separated link"))
+          )
+        )
+      )
+    )
+  )
+)
+        )
     }
   });
-module.exports = AddToCart;
 
-},{"../actions/app-actions.js":160,"react":159}],162:[function(require,module,exports){
+module.exports = Navbar;
+
+
+
+
+},{"react":159}],162:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
-var AppStore = require('../stores/app-store.js');
-var RemoveFromCart = require('../components/app-removefromcart.js');
-var Increase = require('../components/app-increase.js');
-var Decrease = require('../components/app-decrease.js');
+var Catalog = require('../components/catalog/app-catalog.js');
+var Cart = require('../components/cart/app-cart.js');
+var Navbar = require('../components/app-navbar.js');
+
+var APP =
+  React.createClass({displayName: "APP",
+    render:function(){
+      return (
+      	React.createElement("div", null, 
+        React.createElement(Navbar, null), 
+      	React.createElement("h1", null, "Lets Shop"), 
+      	React.createElement(Catalog, null), 
+      	React.createElement("h1", null, "Cart"), 
+      	React.createElement(Cart, null)
+      	)
+      	)
+    }
+  });
+module.exports = APP;
+
+},{"../components/app-navbar.js":161,"../components/cart/app-cart.js":163,"../components/catalog/app-catalog.js":168,"react":159}],163:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+var AppStore = require('../../stores/app-store.js');
+var RemoveFromCart = require('../cart/app-removefromcart.js');
+var Increase = require('../cart/app-increase.js');
+var Decrease = require('../cart/app-decrease.js');
 
 
 function cartItems(){
@@ -21308,11 +21368,71 @@ var Cart =
   });
 module.exports = Cart;
 
-},{"../components/app-decrease.js":164,"../components/app-increase.js":165,"../components/app-removefromcart.js":167,"../stores/app-store.js":173,"react":159}],163:[function(require,module,exports){
+},{"../../stores/app-store.js":173,"../cart/app-decrease.js":164,"../cart/app-increase.js":165,"../cart/app-removefromcart.js":166,"react":159}],164:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
-var AppStore = require('../stores/app-store.js');
-var AddToCart = require('../components/app-addtocart.js');
+var AppActions = require('../../actions/app-actions.js');
+var Decrease =
+  React.createClass({displayName: "Decrease",
+    handleClick:function(){
+      AppActions.decreaseItem(this.props.index);
+    },
+    render:function(){
+      return React.createElement("button", {className: "btn btn-default", onClick: this.handleClick}, "-")
+    }
+  });
+module.exports = Decrease;
+
+},{"../../actions/app-actions.js":160,"react":159}],165:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+var AppActions = require('../../actions/app-actions.js');
+var Increase =
+  React.createClass({displayName: "Increase",
+    handleClick:function(){
+      AppActions.increaseItem(this.props.index);
+    },
+    render:function(){
+      return React.createElement("button", {className: "btn btn-default", onClick: this.handleClick}, "+")
+    }
+  });
+module.exports = Increase;
+
+},{"../../actions/app-actions.js":160,"react":159}],166:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+var AppActions = require('../../actions/app-actions.js');
+var RemoveFromCart =
+  React.createClass({displayName: "RemoveFromCart",
+    handleClick:function(){
+      AppActions.removeItem(this.props.index);
+    },
+    render:function(){
+      return React.createElement("button", {onClick: this.handleClick}, "x")
+    }
+  });
+module.exports = RemoveFromCart;
+
+},{"../../actions/app-actions.js":160,"react":159}],167:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+var AppActions = require('../../actions/app-actions.js');
+var AddToCart =
+  React.createClass({displayName: "AddToCart",
+    handleClick:function(){
+      AppActions.addItem(this.props.item);
+    },
+    render:function(){
+      return React.createElement("button", {className: "btn btn-primary", onClick: this.handleClick}, "Add To cart")
+    }
+  });
+module.exports = AddToCart;
+
+},{"../../actions/app-actions.js":160,"react":159}],168:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react');
+var AppStore = require('../../stores/app-store.js');
+var AddToCart = require('../catalog/app-addtocart.js');
 
 function getCatalog(){
   return {items: AppStore.getCatalog()}
@@ -21336,127 +21456,7 @@ var Catalog =
   });
 module.exports = Catalog;
 
-},{"../components/app-addtocart.js":161,"../stores/app-store.js":173,"react":159}],164:[function(require,module,exports){
-/** @jsx React.DOM */
-var React = require('react');
-var AppActions = require('../actions/app-actions.js');
-var Decrease =
-  React.createClass({displayName: "Decrease",
-    handleClick:function(){
-      AppActions.decreaseItem(this.props.index);
-    },
-    render:function(){
-      return React.createElement("button", {className: "btn btn-default", onClick: this.handleClick}, "-")
-    }
-  });
-module.exports = Decrease;
-
-},{"../actions/app-actions.js":160,"react":159}],165:[function(require,module,exports){
-/** @jsx React.DOM */
-var React = require('react');
-var AppActions = require('../actions/app-actions.js');
-var Increase =
-  React.createClass({displayName: "Increase",
-    handleClick:function(){
-      AppActions.increaseItem(this.props.index);
-    },
-    render:function(){
-      return React.createElement("button", {className: "btn btn-default", onClick: this.handleClick}, "+")
-    }
-  });
-module.exports = Increase;
-
-},{"../actions/app-actions.js":160,"react":159}],166:[function(require,module,exports){
-/** @jsx React.DOM */
-var React = require('react');
-
-var Navbar =
-  React.createClass({displayName: "Navbar",
-    _onChange:function(){
-      Console.log('_onChange -> Navbar');
-    },
-    render:function(){
-        return (
-         React.createElement("nav", {className: "navbar navbar-default"}, 
-  React.createElement("div", {className: "container-fluid"}, 
-    React.createElement("div", {className: "navbar-header"}, 
-      React.createElement("button", {type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#bs-example-navbar-collapse-1"}, 
-        React.createElement("span", {className: "sr-only"}, "Toggle navigation"), 
-        React.createElement("span", {className: "icon-bar"}), 
-        React.createElement("span", {className: "icon-bar"}), 
-        React.createElement("span", {className: "icon-bar"})
-      ), 
-      React.createElement("a", {className: "navbar-brand", href: "#"}, "My cart shop")
-    ), 
-
-    React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
-      React.createElement("ul", {className: "nav navbar-nav"}, 
-        React.createElement("li", {className: "active"}, React.createElement("a", {href: "#"}, "Link ", React.createElement("span", {className: "sr-only"}, "(current)"))), 
-        React.createElement("li", null, React.createElement("a", {href: "#"}, "Link")), 
-        React.createElement("li", {className: "dropdown"}, 
-          React.createElement("a", {href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-expanded": "false"}, "Dropdown ", React.createElement("span", {className: "caret"})), 
-          React.createElement("ul", {className: "dropdown-menu", role: "menu"}, 
-            React.createElement("li", null, React.createElement("a", {href: "#"}, "Action")), 
-            React.createElement("li", null, React.createElement("a", {href: "#"}, "Another action")), 
-            React.createElement("li", null, React.createElement("a", {href: "#"}, "Something else here")), 
-            React.createElement("li", {className: "divider"}), 
-            React.createElement("li", null, React.createElement("a", {href: "#"}, "Separated link")), 
-            React.createElement("li", {className: "divider"}), 
-            React.createElement("li", null, React.createElement("a", {href: "#"}, "One more separated link"))
-          )
-        )
-      )
-    )
-  )
-)
-        )
-    }
-  });
-
-module.exports = Navbar;
-
-
-
-
-},{"react":159}],167:[function(require,module,exports){
-/** @jsx React.DOM */
-var React = require('react');
-var AppActions = require('../actions/app-actions.js');
-var RemoveFromCart =
-  React.createClass({displayName: "RemoveFromCart",
-    handleClick:function(){
-      AppActions.removeItem(this.props.index);
-    },
-    render:function(){
-      return React.createElement("button", {onClick: this.handleClick}, "x")
-    }
-  });
-module.exports = RemoveFromCart;
-
-},{"../actions/app-actions.js":160,"react":159}],168:[function(require,module,exports){
-/** @jsx React.DOM */
-var React = require('react');
-var Catalog = require('../components/app-catalog.js');
-var Cart = require('../components/app-cart.js');
-var Navbar = require('../components/app-navbar.js');
-
-var APP =
-  React.createClass({displayName: "APP",
-    render:function(){
-      return (
-      	React.createElement("div", null, 
-        React.createElement(Navbar, null), 
-      	React.createElement("h1", null, "Lets Shop"), 
-      	React.createElement(Catalog, null), 
-      	React.createElement("h1", null, "Cart"), 
-      	React.createElement(Cart, null)
-      	)
-      	)
-    }
-  });
-module.exports = APP;
-
-},{"../components/app-cart.js":162,"../components/app-catalog.js":163,"../components/app-navbar.js":166,"react":159}],169:[function(require,module,exports){
+},{"../../stores/app-store.js":173,"../catalog/app-addtocart.js":167,"react":159}],169:[function(require,module,exports){
 module.exports = {
   ADD_ITEM: 'ADD_ITEM',
   REMOVE_ITEM: 'REMOVE_ITEM',
@@ -21546,7 +21546,7 @@ React.render(
   React.createElement(APP, null),
   document.getElementById('main'));
 
-},{"./components/app":168,"react":159}],173:[function(require,module,exports){
+},{"./components/app":162,"react":159}],173:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('object-assign');
@@ -21555,12 +21555,19 @@ var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = "change";
 
 
-var _catalog = [
-    {id:1, title: 'DVD', cost: 10},
-    {id:2, title: 'ENGINE', cost: 50},
-    {id:3, title: 'GPU CARD', cost: 200},
-    {id:4, title: 'MOTOBIKE', cost: 1000}
-  ];
+var _catalog = [];
+
+for(var i=1; i<9; i++){
+  _catalog.push({
+    'id': 'Widget' +i,
+    'title':'Widget #' + i,
+    'summary': 'This is an awesome widget!',
+    'description': 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, commodi.',
+    'img': '/assets/product.png',
+    'cost': i
+  });
+}
+
 
 var _cartItems = [];
 
