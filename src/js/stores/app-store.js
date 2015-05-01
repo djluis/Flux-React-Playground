@@ -52,11 +52,19 @@ function _addItem(item){
     _cartItems.forEach(function(cartItem, i){
       if(cartItem.id===item.id){
         _increaseItem(i);
-      }
+      } 
     });
   }
 }
 
+function _cartTotals(){
+  var qty = 0, total = 0;
+  _cartItems.forEach(function(cartItem){
+    qty+=cartItem.qty;
+    total+=cartItem.qty*cartItem.cost;
+  });
+  return {'qty': qty, 'total': total};
+}
 
 var AppStore = assign(EventEmitter.prototype, {
   emitChange:function(){
@@ -77,6 +85,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getCatalog:function(){
     return _catalog
+  },
+
+  getCartTotals:function(){
+    return _cartTotals();
   },
 
   dispatcherIndex:AppDispatcher.register(function(payload){

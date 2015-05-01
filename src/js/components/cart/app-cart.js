@@ -5,6 +5,7 @@ var RemoveFromCart = require('../cart/app-removefromcart.js');
 var Increase = require('../cart/app-increase.js');
 var Decrease = require('../cart/app-decrease.js');
 var StoreWatchMixin = require('../../mixins/StoreWatchMixin.js');
+Link = require('react-router-component').Link;
 
 function cartItems(){
   return {items: AppStore.getCart()}
@@ -32,6 +33,7 @@ var Cart =
           )
       })
       return (
+        <div>
           <table className="table table-hover">
             <thead>
               <tr>
@@ -52,6 +54,8 @@ var Cart =
               </tr>
             </tfoot>
           </table>
+          <Link href='/'>Continue Shopping</Link>
+          </div>
         )
     }
   });

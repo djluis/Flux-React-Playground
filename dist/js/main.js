@@ -22940,7 +22940,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants.js":198,"../dispatchers/app-dispatcher.js":199}],186:[function(require,module,exports){
+},{"../constants/app-constants.js":199,"../dispatchers/app-dispatcher.js":200}],186:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 
@@ -23010,7 +23010,7 @@ var Template =
   });
 module.exports = Template;
 
-},{"./header/app-header.js":196,"react":184}],188:[function(require,module,exports){
+},{"./header/app-header.js":197,"react":184}],188:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var Catalog = require('../components/catalog/app-catalog.js');
@@ -23039,7 +23039,7 @@ var APP =
   });
 module.exports = APP;
 
-},{"../components/app-navbar.js":186,"../components/cart/app-cart.js":189,"../components/catalog/app-catalog.js":194,"./app-template.js":187,"./product/app-catalogdetail.js":197,"react":184,"react-router-component":7}],189:[function(require,module,exports){
+},{"../components/app-navbar.js":186,"../components/cart/app-cart.js":189,"../components/catalog/app-catalog.js":194,"./app-template.js":187,"./product/app-catalogdetail.js":198,"react":184,"react-router-component":7}],189:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var AppStore = require('../../stores/app-store.js');
@@ -23047,6 +23047,7 @@ var RemoveFromCart = require('../cart/app-removefromcart.js');
 var Increase = require('../cart/app-increase.js');
 var Decrease = require('../cart/app-decrease.js');
 var StoreWatchMixin = require('../../mixins/StoreWatchMixin.js');
+Link = require('react-router-component').Link;
 
 function cartItems(){
   return {items: AppStore.getCart()}
@@ -23074,6 +23075,7 @@ var Cart =
           )
       })
       return (
+        React.createElement("div", null, 
           React.createElement("table", {className: "table table-hover"}, 
             React.createElement("thead", null, 
               React.createElement("tr", null, 
@@ -23093,13 +23095,15 @@ var Cart =
                 React.createElement("td", null, "$", total)
               )
             )
+          ), 
+          React.createElement(Link, {href: "/"}, "Continue Shopping")
           )
         )
     }
   });
 module.exports = Cart;
 
-},{"../../mixins/StoreWatchMixin.js":202,"../../stores/app-store.js":203,"../cart/app-decrease.js":190,"../cart/app-increase.js":191,"../cart/app-removefromcart.js":192,"react":184}],190:[function(require,module,exports){
+},{"../../mixins/StoreWatchMixin.js":203,"../../stores/app-store.js":204,"../cart/app-decrease.js":190,"../cart/app-increase.js":191,"../cart/app-removefromcart.js":192,"react":184,"react-router-component":7}],190:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var AppActions = require('../../actions/app-actions.js');
@@ -23154,7 +23158,7 @@ var AddToCart =
       AppActions.addItem(this.props.item);
     },
     render:function(){
-      return React.createElement("button", {className: "btn btn-primary", onClick: this.handleClick}, "Add To cart")
+      return React.createElement("button", {className: "btn btn-default", onClick: this.handleClick}, "Add To cart")
     }
   });
 module.exports = AddToCart;
@@ -23164,6 +23168,8 @@ module.exports = AddToCart;
 var React = require('react');
 var AppStore = require('../../stores/app-store.js');
 var AddToCart = require('../catalog/app-addtocart.js');
+var CatalogItem = require('./app-catalogitem.js');
+var StoreWatchMixin = require('../../mixins/StoreWatchMixin.js');
 
 function getCatalog(){
   return {items: AppStore.getCatalog()}
@@ -23171,15 +23177,13 @@ function getCatalog(){
 
 var Catalog =
   React.createClass({displayName: "Catalog",
-    getInitialState:function(){
-      return getCatalog();
-    },
+    mixins: [new StoreWatchMixin(getCatalog)],
     render:function(){
       var items = this.state.items.map(function(item){
-        return React.createElement("tr", null, React.createElement("td", null, item.title), React.createElement("td", null, "$", item.cost), React.createElement("td", null, React.createElement(AddToCart, {item: item})))
+        return React.createElement(CatalogItem, {item: item})
       })
       return (
-          React.createElement("table", {className: "table table-hover"}, 
+          React.createElement("div", {className: "row"}, 
           items
           )
         )
@@ -23187,29 +23191,65 @@ var Catalog =
   });
 module.exports = Catalog;
 
-},{"../../stores/app-store.js":203,"../catalog/app-addtocart.js":193,"react":184}],195:[function(require,module,exports){
+},{"../../mixins/StoreWatchMixin.js":203,"../../stores/app-store.js":204,"../catalog/app-addtocart.js":193,"./app-catalogitem.js":195,"react":184}],195:[function(require,module,exports){
+/** @jsx React.DOM */
+var React = require('react'),
+	AddToCart = require('./app-addtocart.js'),
+	Link = require('react-router-component').Link;
+
+var CatalogItem =
+  React.createClass({displayName: "CatalogItem",
+    render:function(){
+    	var itemStyle ={
+    		borderBottom:'1px solid #ccc',
+    		padddingBottom:15
+    	};
+      return (
+      	React.createElement("div", {className: "col-sm-3", style: itemStyle}, 
+      		React.createElement("h4", null, this.props.item.title), 
+      		React.createElement("img", {src: this.props.item.img, alt: ""}), 
+      		React.createElement("p", null, this.props.item.summary), 
+      		React.createElement("p", null, "$", this.props.item.cost, " ", React.createElement("span", {className: "text-success"}, this.props.item.inCart && '(' + this.props.item.qty + ' in cart)')), 
+      		React.createElement("div", {className: "btn-group btn-group-xs"}, 
+      		React.createElement(Link, {href: '/item/' + this.props.item.id, className: "btn btn-default"}, "Learn more"), 
+      		React.createElement(AddToCart, {item: this.props.item})
+      		)
+      	)
+      	)
+    }
+  });
+module.exports = CatalogItem;
+
+},{"./app-addtocart.js":193,"react":184,"react-router-component":7}],196:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var Link = require('react-router-component').Link;
+var AppStore = require('../../stores/app-store');
+var StoreWatchMixin = require('../../mixins/StoreWatchMixin.js')
+
+function CartTotals(){
+  return AppStore.getCartTotals();
+}
 
 var CartSummary =
   React.createClass({displayName: "CartSummary",
+    mixins:[StoreWatchMixin(CartTotals)],
     render:function(){
       return (
       	React.createElement("div", null, 
       		React.createElement(Link, {
       			href: "/cart", 
       			className: "btn btn-success"}, 
-      			"Cart Items: QTY / $COST"
+      			"Cart Items: ", this.state.qty, " / $", this.state.total
       		)
-      	)
+      	) 
 
       	)
     }
   });
 module.exports = CartSummary;
 
-},{"react":184,"react-router-component":7}],196:[function(require,module,exports){
+},{"../../mixins/StoreWatchMixin.js":203,"../../stores/app-store":204,"react":184,"react-router-component":7}],197:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var CartSummary = require('./app-cartsummary.js');
@@ -23230,19 +23270,45 @@ var Header =
   });
 module.exports = Header;
 
-},{"./app-cartsummary.js":195,"react":184}],197:[function(require,module,exports){
+},{"./app-cartsummary.js":196,"react":184}],198:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
+var AppStore = require('../../stores/app-store.js');
+var AddToCart = require('../catalog/app-addtocart.js');
+var StoreWatchMixin = require('../../mixins/StoreWatchMixin.js');
+
+function getCatalogItem(component){
+	var thisItem;
+	AppStore.getCatalog().forEach(function(item){
+		if(item.id.toString() === component.props.item){
+			thisItem = item
+		}
+	});
+	return {item: thisItem}
+}
 
 var CatalogDetail =
   React.createClass({displayName: "CatalogDetail",
+  	mixins: [new StoreWatchMixin(getCatalogItem)],
     render:function(){
-      return null
+      return (
+      		React.createElement("div", null, 
+	      		React.createElement("h2", null, this.state.item.title), 
+	      		React.createElement("img", {src: this.state.item.img, alt: ""}), 
+	      		React.createElement("p", null, this.state.item.summary), 
+	      		React.createElement("p", null, "$", this.state.item.cost, " ", React.createElement("span", {className: "text-success"}, this.state.item.inCart && '(' + this.state.item.qty + ' in cart)')), 
+	      		React.createElement("div", {className: "btn-group btn-group-sm"}, 
+	      		React.createElement(AddToCart, {item: this.state.item}), 
+	      		React.createElement(Link, {href: "/", className: "btn btn-default"}, "Continue shopping")
+	      		)
+      		)
+      	)
     }
   });
+
 module.exports = CatalogDetail;
 
-},{"react":184}],198:[function(require,module,exports){
+},{"../../mixins/StoreWatchMixin.js":203,"../../stores/app-store.js":204,"../catalog/app-addtocart.js":193,"react":184}],199:[function(require,module,exports){
 module.exports = {
   ADD_ITEM: 'ADD_ITEM',
   REMOVE_ITEM: 'REMOVE_ITEM',
@@ -23250,7 +23316,7 @@ module.exports = {
   DECREASE_ITEM: 'DECREASE_ITEM',
 };
 
-},{}],199:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 var Dispatcher = require('./dispatcher.js');
 var assign = require('object-assign');
 
@@ -23266,7 +23332,7 @@ var AppDispatcher = assign(Dispatcher.prototype, {
 
 module.exports = AppDispatcher;
 
-},{"./dispatcher.js":200,"object-assign":4}],200:[function(require,module,exports){
+},{"./dispatcher.js":201,"object-assign":4}],201:[function(require,module,exports){
 var Promise = require('es6-promise').Promise;
 var assign = require('object-assign');
 
@@ -23323,7 +23389,7 @@ Dispatcher.prototype = assign(Dispatcher.prototype, {
 
 module.exports = Dispatcher;
 
-},{"es6-promise":1,"object-assign":4}],201:[function(require,module,exports){
+},{"es6-promise":1,"object-assign":4}],202:[function(require,module,exports){
 /** @jsx React.DOM */
 var APP = require('./components/app');
 var React = require('react');
@@ -23332,7 +23398,7 @@ React.render(
   React.createElement(APP, null),
   document.getElementById('main'));
 
-},{"./components/app":188,"react":184}],202:[function(require,module,exports){
+},{"./components/app":188,"react":184}],203:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react');
 var AppStore = require('../stores/app-store.js');
@@ -23349,7 +23415,7 @@ var StoreWatchMixin = function(cb){
       AppStore.removeChangeListener(this._onChange)
     },
     _onChange:function(){
-      this.setState(cb())
+      this.setState(cb(this))
     }
 
   }
@@ -23357,7 +23423,7 @@ var StoreWatchMixin = function(cb){
 
 module.exports = StoreWatchMixin;
 
-},{"../stores/app-store.js":203,"react":184}],203:[function(require,module,exports){
+},{"../stores/app-store.js":204,"react":184}],204:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('object-assign');
@@ -23412,11 +23478,19 @@ function _addItem(item){
     _cartItems.forEach(function(cartItem, i){
       if(cartItem.id===item.id){
         _increaseItem(i);
-      }
+      } 
     });
   }
 }
 
+function _cartTotals(){
+  var qty = 0, total = 0;
+  _cartItems.forEach(function(cartItem){
+    qty+=cartItem.qty;
+    total+=cartItem.qty*cartItem.cost;
+  });
+  return {'qty': qty, 'total': total};
+}
 
 var AppStore = assign(EventEmitter.prototype, {
   emitChange:function(){
@@ -23437,6 +23511,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getCatalog:function(){
     return _catalog
+  },
+
+  getCartTotals:function(){
+    return _cartTotals();
   },
 
   dispatcherIndex:AppDispatcher.register(function(payload){
@@ -23466,4 +23544,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":198,"../dispatchers/app-dispatcher":199,"events":2,"object-assign":4}]},{},[201])
+},{"../constants/app-constants":199,"../dispatchers/app-dispatcher":200,"events":2,"object-assign":4}]},{},[202])

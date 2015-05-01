@@ -14,7 +14,7 @@ var StoreWatchMixin = function(cb){
       AppStore.removeChangeListener(this._onChange)
     },
     _onChange:function(){
-      this.setState(cb())
+      this.setState(cb(this))
     }
 
   }
